@@ -1,119 +1,111 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contractimpl, contracttype, symbol_short,
-    Env, String, Symbol, Vec,
+    contract, contractimpl, contracttype,
+    symbol_short, Address, Env, String,
+    Symbol, Vec,
 };
 
-// Struktur data Todo
 #[contracttype]
-#[derive(Clone, Debug)]
-pub struct Todo {
+#[derive(Clone)]
+pub struct Candidate {
     id: u64,
-    task: String,
-    completed: bool,
+    name: String,
+    vote_count: u32,
 }
 
-// Key storage
-const TODO_DATA: Symbol = symbol_short!("TODO_DATA");
+#[contracttype]
+#[derive(Clone)]
+pub struct VoteRecord {
+    voter: Address,
+    candidate_id: u64,
+}
+
+const CANDIDATES: Symbol = symbol_short!("CANDS");
+const VOTES: Symbol = symbol_short!("VOTES");
 
 #[contract]
-pub struct TodoContract;
+pub struct EVotingContract;
 
 #[contractimpl]
-impl TodoContract {
+impl EVotingContract {
 
-    // Ambil semua todo
-    pub fn get_todos(env: Env) -> Vec<Todo> {
+    // Tambah kandidat
+    pub fn add_candidate(env: Env, name: String) {
+        let mut candidates: Vec<Candidate> =
+            env.storage()
+                .instance()
+                .get(&CANDIDATES)
+                .unwrap_or(Vec::new(&env));
+
+        let candidate = Candidate {
+            id: env.prng().gen::<u64>(),
+            name,
+            vote_count: 0,
+        };
+
+        candidates.push_back(candidate);
+
+        env.storage().instance().set(&CANDIDATES, &candidates);
+    }
+
+    // Ambil semua kandidat
+    pub fn get_candidates(env: Env) -> Vec<Candidate> {
         env.storage()
             .instance()
-            .get(&TODO_DATA)
+            .get(&CANDIDATES)
             .unwrap_or(Vec::new(&env))
     }
 
-    // Tambah todo baru
-    pub fn add_todo(env: Env, task: String) -> String {
+    // Voting
+    pub fn vote(env: Env, voter: Address, candidate_id: u64) -> String {
 
-        // 1. Ambil data todo lama
-        let mut todos: Vec<Todo> = env.storage()
-            .instance()
-            .get(&TODO_DATA)
-            .unwrap_or(Vec::new(&env));
+        voter.require_auth();
 
-        // 2. Buat todo baru
-        let todo = Todo {
-            id: env.prng().gen::<u64>(),
-            task,
-            completed: false,
-        };
+        let mut votes: Vec<VoteRecord> =
+            env.storage()
+                .instance()
+                .get(&VOTES)
+                .unwrap_or(Vec::new(&env));
 
-        // 3. Tambahkan todo
-        todos.push_back(todo);
+        // cek apakah user sudah voting
+        for i in 0..votes.len() {
+            let vote = votes.get(i).unwrap();
 
-        // 4. Simpan kembali
-        env.storage().instance().set(&TODO_DATA, &todos);
-
-        String::from_str(&env, "Todo berhasil ditambahkan")
-    }
-
-    // Menandai todo selesai
-    pub fn complete_todo(env: Env, id: u64) -> String {
-
-        // 1. Ambil semua todo
-        let mut todos: Vec<Todo> = env.storage()
-            .instance()
-            .get(&TODO_DATA)
-            .unwrap_or(Vec::new(&env));
-
-        // 2. Cari todo berdasarkan id
-        for i in 0..todos.len() {
-
-            let mut todo = todos.get(i).unwrap();
-
-            if todo.id == id {
-
-                // ubah status completed
-                todo.completed = true;
-
-                // update data
-                todos.set(i, todo);
-
-                // simpan kembali
-                env.storage().instance().set(&TODO_DATA, &todos);
-
-                return String::from_str(&env, "Todo selesai");
+            if vote.voter == voter {
+                return String::from_str(&env, "Sudah voting");
             }
         }
 
-        String::from_str(&env, "Todo tidak ditemukan")
-    }
+        let mut candidates: Vec<Candidate> =
+            env.storage()
+                .instance()
+                .get(&CANDIDATES)
+                .unwrap_or(Vec::new(&env));
 
-    // Hapus todo
-    pub fn delete_todo(env: Env, id: u64) -> String {
+        // tambah vote kandidat
+        for i in 0..candidates.len() {
+            let mut candidate = candidates.get(i).unwrap();
 
-        // 1. Ambil semua todo
-        let mut todos: Vec<Todo> = env.storage()
-            .instance()
-            .get(&TODO_DATA)
-            .unwrap_or(Vec::new(&env));
+            if candidate.id == candidate_id {
+                candidate.vote_count += 1;
 
-        // 2. Cari index todo
-        for i in 0..todos.len() {
+                candidates.set(i, candidate);
 
-            if todos.get(i).unwrap().id == id {
+                let record = VoteRecord {
+                    voter,
+                    candidate_id,
+                };
 
-                // hapus todo
-                todos.remove(i);
+                votes.push_back(record);
 
-                // simpan kembali
-                env.storage().instance().set(&TODO_DATA, &todos);
+                env.storage().instance().set(&CANDIDATES, &candidates);
+                env.storage().instance().set(&VOTES, &votes);
 
-                return String::from_str(&env, "Todo berhasil dihapus");
+                return String::from_str(&env, "Voting berhasil");
             }
         }
 
-        String::from_str(&env, "Todo tidak ditemukan")
+        String::from_str(&env, "Kandidat tidak ditemukan")
     }
 }
-
-mod test;

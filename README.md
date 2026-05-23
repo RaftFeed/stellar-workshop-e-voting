@@ -1,87 +1,85 @@
-ID : CCQGASVHOQ7XXKPOEKA554TSCWERZUXROCE6SAIP5BVSBSU6NGHGW64H
----
+# Stellar E-Voting DApp
 
-# Stellar Todo List DApp
-
-**Stellar Todo List DApp** - Blockchain-Based Decentralized Task Management System
+**Stellar E-Voting DApp** - Blockchain-Based Decentralized Campus Voting System
 
 ## Project Description
 
-Stellar Todo List DApp is a decentralized smart contract application built on the Stellar blockchain using the Soroban SDK. This project allows users to manage daily tasks directly on-chain in a secure, transparent, and immutable way.
+Stellar E-Voting DApp is a decentralized smart contract application built on the Stellar blockchain using the Soroban SDK. This project enables secure, transparent, and tamper-proof digital voting directly on-chain for campus organizations, student elections, and governance systems.
 
-The smart contract enables users to:
+The smart contract allows users to:
 
-* Add new todo tasks
-* View all todos
-* Mark todos as completed
-* Delete todos permanently
+* Register election candidates
+* View all candidates
+* Cast votes securely
+* Prevent duplicate voting
+* Display real-time voting results
 
-All todo data is stored inside Soroban contract storage, ensuring persistence and reliability without depending on centralized databases.
+All voting data is stored inside Soroban contract storage, ensuring transparency, persistence, and decentralization without relying on centralized servers or databases.
 
-Each todo item contains:
+Each voting record contains:
 
-* Unique ID
-* Task description
-* Completion status
+* Unique candidate ID
+* Candidate name
+* Total vote count
+* Voter wallet verification
 
-This system demonstrates how blockchain technology can be used for simple productivity applications while maintaining decentralization and transparency.
+This system demonstrates how blockchain technology can be applied to modern democratic systems while maintaining fairness, transparency, and immutability.
 
 ---
 
 # Project Vision
 
-Our vision is to build a decentralized productivity ecosystem where users fully control their personal task management systems without relying on centralized services.
+Our vision is to build a decentralized digital voting ecosystem that guarantees transparency, fairness, and trust for campus-level elections and organizational governance.
 
 We aim to:
 
-* **Decentralize Productivity Tools**
-  Move traditional task management applications onto blockchain infrastructure.
+* **Decentralize Voting Systems**
+  Replace traditional centralized voting systems with blockchain infrastructure.
 
-* **Ensure Data Ownership**
-  Users maintain complete ownership of their task data.
+* **Ensure Voting Integrity**
+  Prevent vote manipulation and duplicate voting through smart contracts.
 
 * **Provide Transparency**
-  All task operations are verifiable on-chain.
+  All voting activities and results are verifiable on-chain.
 
-* **Guarantee Persistence**
-  Todos remain securely stored on the Stellar blockchain.
+* **Guarantee Security**
+  Voting records are immutable and securely stored on the Stellar blockchain.
 
 * **Promote Web3 Adoption**
-  Introduce practical blockchain utility through everyday productivity tools.
+  Introduce blockchain utility through practical governance applications.
 
 ---
 
 # Key Features
 
-## 1. Add Todo Tasks
+## 1. Register Candidates
 
-* Create new tasks easily
+* Add election candidates easily
 * Automatic unique ID generation
-* Stored permanently on-chain
-* Default status set to incomplete
+* Candidate data stored permanently on-chain
 
-## 2. View All Todos
+## 2. View All Candidates
 
-* Retrieve all stored tasks
-* Efficient blockchain storage access
+* Retrieve all registered candidates
+* Display live vote counts
 * Easy frontend integration
 
-## 3. Complete Todo
+## 3. Secure Voting System
 
-* Mark tasks as completed
-* Update task status directly on-chain
-* Real-time state synchronization
+* One wallet = one vote
+* Prevent duplicate voting
+* Wallet authentication using Soroban
 
-## 4. Delete Todo
+## 4. Real-Time Vote Counting
 
-* Remove tasks permanently
-* Clean storage management
-* Efficient deletion by task ID
+* Vote counts update instantly
+* Transparent election results
+* Fully verifiable on-chain
 
 ## 5. Secure Blockchain Storage
 
 * Built on Stellar Soroban
-* Immutable transaction history
+* Immutable voting history
 * Transparent smart contract logic
 * Decentralized data persistence
 
@@ -89,147 +87,27 @@ We aim to:
 
 # Contract Functions
 
-## `add_todo(task)`
+## `add_candidate(name)`
 
-Adds a new todo item into storage.
+Adds a new candidate into storage.
 
 ### Parameters
 
-* `task` → Task description
+* `name` → Candidate name
 
 ---
 
-## `get_todos()`
+## `get_candidates()`
 
-Returns all stored todo items.
+Returns all registered candidates.
 
 ### Returns
 
 Vector of:
 
 ```rust
-Todo {
+Candidate {
     id: u64,
-    task: String,
-    completed: bool,
+    name: String,
+    vote_count: u32,
 }
-```
-
----
-
-## `complete_todo(id)`
-
-Marks a todo as completed.
-
-### Parameters
-
-* `id` → Unique todo ID
-
----
-
-## `delete_todo(id)`
-
-Deletes a todo item from storage.
-
-### Parameters
-
-* `id` → Unique todo ID
-
----
-
-# Data Structure
-
-```rust
-pub struct Todo {
-    id: u64,
-    task: String,
-    completed: bool,
-}
-```
-
----
-
-# Future Scope
-
-## Short-Term Improvements
-
-1. Add task deadlines
-2. Add task priorities
-3. Support task categories
-4. Improve frontend integration
-
-## Medium-Term Development
-
-5. Wallet-based user authentication
-6. Personal todo ownership per wallet address
-7. Search and filter functionality
-8. Pagination for large todo lists
-
-## Long-Term Vision
-
-9. Cross-device decentralized synchronization
-10. IPFS integration for metadata storage
-11. AI-based productivity suggestions
-12. DAO-governed productivity ecosystem
-
----
-
-# Technical Requirements
-
-* Rust
-* Soroban SDK
-* Stellar Blockchain
-* Soroban CLI
-
----
-
-# Getting Started
-
-Deploy the smart contract to Stellar Soroban network and interact with the following functions:
-
-* `add_todo()`
-* `get_todos()`
-* `complete_todo()`
-* `delete_todo()`
-
----
-
-# Example Workflow
-
-## Add Todo
-
-```rust
-add_todo("Finish blockchain assignment")
-```
-
-## View Todos
-
-```rust
-get_todos()
-```
-
-## Complete Todo
-
-```rust
-complete_todo(todo_id)
-```
-
-## Delete Todo
-
-```rust
-delete_todo(todo_id)
-```
-
----
-
-# Smart Contract Platform
-
-Built using:
-
-* Soroban Smart Contracts
-* Stellar Blockchain
-* Rust Programming Language
-
----
-
-**Stellar Todo List DApp** — Decentralized Productivity on the Blockchain 🚀
