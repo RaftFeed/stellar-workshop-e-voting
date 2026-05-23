@@ -1,0 +1,11 @@
+{
+  "name": "stellar-e-voting-dapp-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root forwarding configuration for Stellar E-Voting DApp",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "install:frontend": "npm --prefix frontend install"
+  }
+}
